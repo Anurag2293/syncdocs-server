@@ -4,16 +4,12 @@ import Document from '../models/Document.js'
 
 const io = new Server({
     cors: {
-        origin: 'http://localhost:5173',
+        origin: process.env.CLIENT_URL,
         methods: ['GET', 'POST']
     }
 })
 
 io.use((socket, next) => {
-    // console.log(socket.handshake.query)
-    // console.log(socket.handshake.auth)
-
-    // next(new Error('not authorized'))
     next()
 })
 
