@@ -11,7 +11,7 @@ const io = new Server({
 
 io.use((socket, next) => {
     // console.log(socket.handshake.query)
-    console.log(socket.handshake.auth)
+    // console.log(socket.handshake.auth)
 
     // next(new Error('not authorized'))
     next()
