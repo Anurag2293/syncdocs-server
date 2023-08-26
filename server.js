@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import http from 'http'
 import express from 'express'
+import cors from 'cors'
+
 import connectToDB from './db/mongoose.js'
 import io from './routers/socket.js'
 import userRouter from './routers/user.js'
@@ -10,6 +12,7 @@ const app = express()
 const server = http.createServer(app)
 const port = process.env.PORT || 3001;
 
+app.use(cors())
 io.attach(server)
 app.use(express.json())
 app.use('/users', userRouter)
