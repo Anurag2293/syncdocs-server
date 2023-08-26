@@ -1,15 +1,28 @@
-const connectToDB = require('./db/mongoose.js')
-const Document = require('./models/Document.js')
+import { Server } from 'socket.io'
+import http from 'http'
+import express from 'express'
+import connectToDB from './db/mongoose.js'
+import Document from './models/Document.js'
+import { defaultValue } from './utils/constants.js'
 
 connectToDB()
-const defaultValue = ''
-
-const io = require('socket.io')(3001, {
+const app = express()
+const server = http.createServer(app)
+const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: 'http://localhost:5173',
         methods: ['GET', 'POST']
     }
-});
+})
+
+const port = process.env.PORT || 3001;
+
+io.use((socket, next) => {
+    console.log(socket.handshake.query)
+    console.log(socket.handshake.auth)
+
+    next(new Error('not authorized'))
+})
 
 io.on('connection', socket => {
     socket.on('get-document', async (documentId) => {
@@ -36,3 +49,5 @@ const findOrCreateDocument = async (id) => {
     if (document) return document
     return await Document.create({ _id: id, data: defaultValue })
 }
+
+server.listen(port, () => console.log(`Listening on port ${port}`))
